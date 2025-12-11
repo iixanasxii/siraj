@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <title>منصة سِراج - مركز العمليات</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        background: #020509;
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+          sans-serif;
+      }
+
+      .siraj-ops-screen {
+        width: 100vw;
+        height: 100vh;
+        box-sizing: border-box;
+        padding: 16px 20px;
+        background: radial-gradient(
+          circle at top left,
+          #0b141b 0,
+          #050a0f 45%,
+          #020509 100%
+        );
+        color: #ffffff;
+      }
+
+      /* الهيدر */
+
+      .ops-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 16px;
+      }
+
+      .ops-logo-area {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .siraj-logo-circle {
+        width: 38px;
+        height: 38px;
+        border-radius: 999px;
+        background: linear-gradient(135deg, #00c79c, #1fd1ae);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #021010;
+        font-weight: 700;
+        font-size: 18px;
+      }
+
+      .ops-title-block {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+      }
+
+      .ops-app-name {
+        font-size: 12px;
+        color: rgba(255, 255, 255, 0.6);
+      }
+
+      .ops-main-title {
+        font-size: 20px;
+        font-weight: 600;
+      }
+
+      .ops-status-area {
+        display: flex;
+        align-items: center;
+        gap: 18px;
+        font-size: 12px;
+      }
+
+      .ops-status-chip {
+        padding: 6px 12px;
+        border-radius: 999px;
+        background: rgba(0, 199, 156, 0.14);
+        border: 1px solid rgba(0, 199, 156, 0.85);
+        color: #aafbe4;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+
+      .status-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 999px;
+        background: #12d27c;
+      }
+
+      .ops-user {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .ops-avatar {
+        width: 28px;
+        height: 28px;
+        border-radius: 999px;
+        background: #0b141b;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 14px;
+      }
+
+      .ops-user-info {
+        display: flex;
+        flex-direction: column;
+        gap: 1px;
+      }
+
+      .ops-user-name {
+        font-size: 12px;
+      }
+
+      .ops-user-role {
+        font-size: 11px;
+        color: rgba(255, 255, 255, 0.5);
+      }
+
+      .ops-time {
+        font-size: 12px;
+        color: rgba(255, 255, 255, 0.6);
+      }
+
+      /* الجسم الرئيسي - 3 أعمدة */
+
+      .ops-main {
+        display: grid;
+        grid-template-columns: 320px minmax(0, 1.4fr) 380px;
+        gap: 16px;
+        height: calc(100% - 60px);
+      }
+
+      .ops-column {
+        background: #050a0f;
+        border-radius: 18px;
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        padding: 12px;
+        box-sizing: border-box;
+        min-width: 0;
+      }
+
+      .ops-column-header {
+        display: flex;
+        align-items: center;
+        margin-bottom: 10px;
+      }
+
+      .ops-column-title {
+        font-size: 13px;
+        font-weight: 600;
+      }
+
+      .ops-column-subtitle {
+        margin-right: auto;
+        font-size: 11px;
+        color: rgba(255, 255, 255, 0.5);
+      }
+
+      /* العمود الأيسر - البلاغات */
+
+      .filter-row {
+        display: flex;
+        gap: 8px;
+        margin-bottom: 10px;
+        flex-wrap: wrap;
+      }
+
+      .filter-chip {
+        padding: 4px 10px;
+        border-radius: 999px;
+        border: 1px solid rgba(255, 255, 255, 0.16);
+        font-size: 11px;
+        color: rgba(255, 255, 255, 0.8);
+        background: #050c12;
+      }
+
+      .filter-chip.filter-active {
+        border-color: rgba(0, 199, 156, 0.9);
+        background: rgba(0, 199, 156, 0.16);
+        color: #aafbe4;
+      }
+
+      .reports-list {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        height: calc(100% - 64px);
+        overflow-y: auto;
+      }
+
+      .report-card {
+        padding: 8px 10px;
+        border-radius: 12px;
+        background: #060d13;
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        cursor: pointer;
+      }
+
+      .report-card.report-active {
+        border-color: rgba(0, 199, 156, 0.9);
+        box-shadow: 0 0 0 1px rgba(0, 199, 156, 0.35);
+      }
+
+      .report-row-top {
+        display: flex;
+        align-items: center;
+        margin-bottom: 4px;
+      }
+
+      .report-id {
+        font-size: 11px;
+        color: rgba(255, 255, 255, 0.7);
+      }
+
+      .report-type {
+        margin-right: auto;
+        font-size: 12px;
+        font-weight: 500;
+      }
+
+      .report-status-pill {
+        padding: 2px 8px;
+        border-radius: 999px;
+        font-size: 10px;
+        background: rgba(255, 179, 71, 0.12);
+        color: #ffb347;
+      }
+
+      .report-status-pill.green {
+        background: rgba(0, 199, 156, 0.16);
+        color: #aafbe4;
+      }
+
+      .report-meta {
+        font-size: 10px;
+        color: rgba(255, 255, 255, 0.55);
+        display: flex;
+        justify-content: space-between;
+        gap: 4px;
+      }
+
+      .report-actions {
+        margin-top: 6px;
+        display: flex;
+        justify-content: flex-end;
+      }
+
+      .contact-caller-btn {
+        padding: 4px 10px;
+        border-radius: 999px;
+        font-size: 10px;
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        border: 1px solid rgba(0, 199, 156, 0.9);
+        background: rgba(0, 199, 156, 0.12);
+        color: #aafbe4;
+      }
+
+      /* العمود الأوسط - الخريطة */
+
+      .map-container {
+        width: 100%;
+        height: 100%;
+        border-radius: 16px;
+        background: radial-gradient(circle at top, #182532 0, #050a0f 60%);
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        padding: 10px;
+        box-sizing: border-box;
+        position: relative;
+      }
+
+      .map-header-row {
+        display: flex;
+        align-items: center;
+        margin-bottom: 8px;
+      }
+
+      .map-title {
+        font-size: 13px;
+        font-weight: 600;
+      }
+
+      .map-legend {
+        margin-right: auto;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 10px;
+        color: rgba(255, 255, 255, 0.65);
+      }
+
+      .legend-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 999px;
+      }
+
+      .legend-dot.fire {
+        background: #ff5b5b;
+      }
+
+      .legend-dot.med {
+        background: #12d27c;
+      }
+
+      .legend-dot.traffic {
+        background: #ffb347;
+      }
+
+      .map-body {
+        width: 100%;
+        height: calc(100% - 26px);
+        border-radius: 12px;
+        background-image: linear-gradient(
+            rgba(255, 255, 255, 0.03) 1px,
+            transparent 1px
+          ),
+          linear-gradient(
+            90deg,
+            rgba(255, 255, 255, 0.03) 1px,
+            transparent 1px
+          );
+        background-size: 32px 32px;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .map-pin {
+        position: absolute;
+        width: 18px;
+        height: 18px;
+        border-radius: 999px;
+        box-shadow: 0 6px 14px rgba(0, 0, 0, 0.7);
+      }
+
+      .map-pin.fire {
+        background: #ff5b5b;
+      }
+
+      .map-pin.med {
+        background: #12d27c;
+      }
+
+      .map-pin.traffic {
+        background: #ffb347;
+      }
+
+      .map-pin-main-ring {
+        position: absolute;
+        width: 36px;
+        height: 36px;
+        border-radius: 999px;
+        border: 2px solid rgba(0, 199, 156, 0.6);
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+      }
+
+      /* العمود الأيمن - تفاصيل البلاغ */
+
+      .details-section {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        height: 100%;
+      }
+
+      .details-card {
+        background: #050a0f;
+        border-radius: 14px;
+        border: 1px solid rgba(255, 255, 255, 0.07);
+        padding: 10px;
+        font-size: 12px;
+      }
+
+      .details-title {
+        font-size: 13px;
+        font-weight: 600;
+        margin-bottom: 4px;
+      }
+
+      .details-label {
+        font-size: 11px;
+        color: rgba(255, 255, 255, 0.55);
+        margin-top: 4px;
+      }
+
+      .details-value {
+        margin-top: 2px;
+      }
+
+      .tags-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        margin-top: 6px;
+      }
+
+      .tag-pill {
+        padding: 4px 8px;
+        border-radius: 999px;
+        background: #050c12;
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        font-size: 10px;
+        color: rgba(255, 255, 255, 0.86);
+      }
+
+      .tag-pill.main {
+        border-color: rgba(0, 199, 156, 0.85);
+        background: rgba(0, 199, 156, 0.12);
+      }
+
+      .timeline {
+        margin-top: 6px;
+        font-size: 11px;
+      }
+
+      .timeline-item {
+        display: flex;
+        gap: 8px;
+        margin-bottom: 4px;
+      }
+
+      .timeline-marker {
+        width: 8px;
+        height: 8px;
+        border-radius: 999px;
+        background: rgba(0, 199, 156, 0.7);
+        margin-top: 4px;
+      }
+
+      .timeline-text {
+        color: rgba(255, 255, 255, 0.7);
+      }
+
+      .ai-note {
+        margin-top: 6px;
+        font-size: 10px;
+        color: rgba(0, 199, 156, 0.85);
+      }
+
+      .actions-row {
+        display: flex;
+        gap: 8px;
+        margin-top: 10px;
+      }
+
+      .primary-btn {
+        flex: 1;
+        padding: 8px 10px;
+        border-radius: 999px;
+        border: none;
+        background: linear-gradient(135deg, #00c79c, #27e0bd);
+        font-size: 12px;
+        font-weight: 600;
+        color: #021010;
+        text-align: center;
+      }
+
+      .secondary-btn {
+        flex: 1;
+        padding: 8px 10px;
+        border-radius: 999px;
+        border: 1px solid rgba(255, 255, 255, 0.16);
+        background: #050c12;
+        font-size: 12px;
+        color: rgba(255, 255, 255, 0.86);
+        text-align: center;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="siraj-ops-screen">
+      <!-- الهيدر -->
+      <div class="ops-header">
+        <div class="ops-logo-area">
+          <div class="siraj-logo-circle">س</div>
+          <div class="ops-title-block">
+            <div class="ops-app-name">منصة سِراج الوطنية</div>
+            <div class="ops-main-title">مركز العمليات المشترك</div>
+          </div>
+        </div>
+        <div class="ops-status-area">
+          <div class="ops-time">السبت · 10:24 م</div>
+          <div class="ops-status-chip">
+            <div class="status-dot"></div>
+            <div>النظام متصل • بلاغات مباشرة</div>
+          </div>
+          <div class="ops-user">
+            <div class="ops-avatar">👤</div>
+            <div class="ops-user-info">
+              <div class="ops-user-name">مشغل غرفة العمليات</div>
+              <div class="ops-user-role">الدفاع المدني - منطقة الرياض</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- الجسم الرئيسي -->
+      <div class="ops-main">
+        <!-- العمود الأيسر: البلاغات الواردة -->
+        <div class="ops-column">
+          <div class="ops-column-header">
+            <div class="ops-column-title">البلاغات الواردة</div>
+            <div class="ops-column-subtitle">آخر ١٥ دقيقة</div>
+          </div>
+
+          <div class="filter-row">
+            <div class="filter-chip filter-active">كل البلاغات</div>
+            <div class="filter-chip">حرائق</div>
+            <div class="filter-chip">حوادث مرورية</div>
+            <div class="filter-chip">حالات طبية</div>
+          </div>
+
+          <div class="reports-list">
+            {% for report in reports %}
+            <a
+              href="/?id={{ report.id }}"
+              style="text-decoration: none; color: inherit;"
+            >
+              <div
+                class="report-card {% if selected_report and selected_report.id == report.id %}report-active{% endif %}"
+              >
+                <div class="report-row-top">
+                  <div class="report-id">#{{ report.id }}</div>
+                  <div class="report-type">{{ report.title }}</div>
+                  <div
+                    class="report-status-pill {% if report.status.startswith('تم') %}green{% endif %}"
+                  >
+                    {{ report.status }}
+                  </div>
+                </div>
+                <div class="report-meta">
+                  <div>{{ report.area }}</div>
+                  <div>{{ report.created_at }}</div>
+                </div>
+                <div class="report-actions">
+                  <div class="contact-caller-btn">
+                    📞 الاتصال بالمبلّغ
+                  </div>
+                </div>
+              </div>
+            </a>
+            {% endfor %}
+          </div>
+        </div>
+
+        <!-- العمود الأوسط: الخريطة -->
+        <div class="ops-column">
+          <div class="map-container">
+            <div class="map-header-row">
+              <div class="map-title">عرض موقع البلاغات النشطة</div>
+              <div class="map-legend">
+                <div class="legend-dot fire"></div>
+                <div>حرائق</div>
+                <div class="legend-dot med"></div>
+                <div>طبية</div>
+                <div class="legend-dot traffic"></div>
+                <div>مرورية</div>
+              </div>
+            </div>
+            <div class="map-body">
+              {% for report in reports %}
+              {% set cat = report.category %}
+              <div
+                class="map-pin {% if cat == 'fire' %}fire{% elif cat == 'medical' %}med{% elif cat == 'traffic' %}traffic{% else %}{% endif %}"
+                style="top: {{ report.map_top }}; left: {{ report.map_left }};"
+                title="{{ report.title }}"
+              ></div>
+              {% endfor %}
+              {% if selected_report %}
+              <div class="map-pin-main-ring"></div>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+
+        <!-- العمود الأيمن: تفاصيل البلاغ المختار -->
+        <div class="ops-column">
+          {% if selected_report %}
+          <div class="details-section">
+            <div class="details-card">
+              <div class="details-title">
+                تفاصيل البلاغ #{{ selected_report.id }}
+              </div>
+              <div class="details-label">نوع البلاغ</div>
+              <div class="details-value">{{ selected_report.title }}</div>
+
+              <div class="details-label">الموقع</div>
+              <div class="details-value">
+                {{ selected_report.location }}
+              </div>
+
+              <div class="details-label">وقت الاستلام</div>
+              <div class="details-value">
+                {{ selected_report.received_at }} • {{ selected_report.created_at }}
+              </div>
+
+              <div class="details-label">ملخص الوصف</div>
+              <div class="details-value">
+                {{ selected_report.short_description }}
+              </div>
+            </div>
+
+            <div class="details-card">
+              <div class="details-title">الجهات التي تم إشعارها عبر سِراج</div>
+              <div class="tags-row">
+                {% for agency in selected_report.agencies %}
+                <div
+                  class="tag-pill {% if loop.index <= 2 %}main{% endif %}"
+                >
+                  {{ agency }}
+                </div>
+                {% endfor %}
+              </div>
+              <div class="ai-note">
+                تم اختيار الجهات تلقائيًا بواسطة نموذج سِراج بناءً على نوع البلاغ
+                والموقع.
+              </div>
+            </div>
+
+            <div class="details-card">
+              <div class="details-title">حالة البلاغ</div>
+              <div class="timeline">
+                <div class="timeline-item">
+                  <div class="timeline-marker"></div>
+                  <div class="timeline-text">
+                    تم استلام البلاغ عبر تطبيق توكلنا.
+                  </div>
+                </div>
+                <div class="timeline-item">
+                  <div class="timeline-marker"></div>
+                  <div class="timeline-text">
+                    تم تحليل البلاغ باستخدام سِراج وتحديد الجهات المعنية.
+                  </div>
+                </div>
+                <div class="timeline-item">
+                  <div class="timeline-marker"></div>
+                  <div class="timeline-text">
+                    تم توجيه الفرق الميدانية الأقرب إلى الموقع.
+                  </div>
+                </div>
+              </div>
+
+              <div class="actions-row">
+                <button class="primary-btn">تحديث حالة الفرق</button>
+                <button class="secondary-btn">إضافة ملاحظة على البلاغ</button>
+              </div>
+            </div>
+          </div>
+          {% else %}
+          <div
+            style="
+              height: 100%;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              font-size: 13px;
+              color: rgba(255, 255, 255, 0.7);
+              text-align: center;
+            "
+          >
+            لا يوجد بلاغ محدد حاليًا. اختر بلاغًا من القائمة على اليسار لعرض
+            التفاصيل.
+          </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
